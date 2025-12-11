@@ -82,15 +82,66 @@ document.querySelectorAll('.stat-item').forEach(stat => {
     statsObserver.observe(stat);
 });
 
-// Parallax Effect for Hero Orbs
+// Advanced Parallax Effects
+let scrollY = 0;
 window.addEventListener('scroll', () => {
+    scrollY = window.pageYOffset;
     const scrolled = window.pageYOffset;
     const orbs = document.querySelectorAll('.gradient-orb');
     
     orbs.forEach((orb, index) => {
         const speed = 0.3 + (index * 0.1);
         const yPos = -(scrolled * speed);
-        orb.style.transform = `translateY(${yPos}px)`;
+        // Store base transform for mouse parallax
+        orb.dataset.baseY = yPos;
+    });
+});
+
+// Mouse Parallax Effect
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    
+    // Apply parallax to hero orbs based on mouse position
+    document.querySelectorAll('.gradient-orb').forEach((orb, index) => {
+        const intensity = 30 + (index * 20);
+        const x = mouseX * intensity;
+        const y = mouseY * intensity;
+        const baseY = orb.dataset.baseY || 0;
+        orb.style.transform = `translateY(${baseY}px) translate(${x}px, ${y}px)`;
+    });
+    
+    // Parallax for feature cards (only when hovering)
+    document.querySelectorAll('.feature-card').forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const isHovering = e.clientX >= rect.left && e.clientX <= rect.right && 
+                          e.clientY >= rect.top && e.clientY <= rect.bottom;
+        
+        if (isHovering && rect.top < window.innerHeight && rect.bottom > 0) {
+            const cardCenterX = rect.left + rect.width / 2;
+            const cardCenterY = rect.top + rect.height / 2;
+            const deltaX = (e.clientX - cardCenterX) / rect.width;
+            const deltaY = (e.clientY - cardCenterY) / rect.height;
+            
+            card.style.transform = `perspective(1000px) rotateY(${deltaX * 5}deg) rotateX(${-deltaY * 5}deg) translateZ(20px)`;
+        }
+    });
+    
+    // Parallax for showcase grid
+    document.querySelectorAll('.grid-item').forEach((item, index) => {
+        const rect = item.getBoundingClientRect();
+        const itemCenterX = rect.left + rect.width / 2;
+        const itemCenterY = rect.top + rect.height / 2;
+        const deltaX = (e.clientX - itemCenterX) / window.innerWidth;
+        const deltaY = (e.clientY - itemCenterY) / window.innerHeight;
+        
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const intensity = 10;
+            item.style.transform = `translate(${deltaX * intensity}px, ${deltaY * intensity}px) scale(1)`;
+        }
     });
 });
 
@@ -137,94 +188,187 @@ if (contactForm) {
     });
 }
 
-// Cursor Effect (Optional - Modern touch)
+// Advanced Custom Cursor
 let cursor = null;
 let cursorFollower = null;
+let cursorText = null;
 
 const createCursor = () => {
+    // Only create cursor on desktop
+    if (window.innerWidth <= 768) return;
+    
     cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     cursorFollower = document.createElement('div');
     cursorFollower.className = 'cursor-follower';
+    cursorText = document.createElement('div');
+    cursorText.className = 'cursor-text';
+    
     document.body.appendChild(cursor);
     document.body.appendChild(cursorFollower);
+    document.body.appendChild(cursorText);
     
-    let mouseX = 0;
-    let mouseY = 0;
-    let followerX = 0;
-    let followerY = 0;
+    // Inicializar posição do cursor no centro da tela
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let followerX = mouseX;
+    let followerY = mouseY;
+    
+    // Posicionar cursor inicialmente
+    cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+    cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
+    cursorText.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
     
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
+        // Usar transform para melhor performance
+        cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
     });
     
     const animateFollower = () => {
-        followerX += (mouseX - followerX) * 0.1;
-        followerY += (mouseY - followerY) * 0.1;
+        // Velocidade aumentada para 0.5 - movimento mais rápido e responsivo
+        followerX += (mouseX - followerX) * 0.5;
+        followerY += (mouseY - followerY) * 0.5;
         
-        cursorFollower.style.left = followerX + 'px';
-        cursorFollower.style.top = followerY + 'px';
+        // Usar transform para melhor performance
+        cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
+        
+        // Atualizar posição do texto também
+        cursorText.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
         
         requestAnimationFrame(animateFollower);
     };
     
     animateFollower();
     
-    // Hover effects
-    document.querySelectorAll('a, button, .feature-card, .stat-item').forEach(el => {
+    // Hide default cursor
+    document.body.style.cursor = 'none';
+    
+    // Hover effects for different elements
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .feature-card, .stat-item, .grid-item, .nav-link');
+    
+    interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hover');
             cursorFollower.classList.add('hover');
+            
+            // Special text for buttons
+            if (el.classList.contains('btn') || el.tagName === 'BUTTON') {
+                cursorText.textContent = 'Click';
+                cursorText.style.opacity = '1';
+            }
         });
+        
         el.addEventListener('mouseleave', () => {
             cursor.classList.remove('hover');
             cursorFollower.classList.remove('hover');
+            cursorText.style.opacity = '0';
+        });
+    });
+    
+    // Special hover for feature cards
+    document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cursorFollower.classList.add('card-hover');
+        });
+        card.addEventListener('mouseleave', () => {
+            cursorFollower.classList.remove('card-hover');
+        });
+    });
+    
+    // Text hover for links
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            if (link.textContent.trim().length < 20) {
+                cursorText.textContent = link.textContent.trim();
+                cursorText.style.opacity = '1';
+            }
+        });
+        link.addEventListener('mouseleave', () => {
+            cursorText.style.opacity = '0';
         });
     });
 };
 
-// Uncomment to enable custom cursor (optional)
-// createCursor();
+// Initialize cursor
+createCursor();
 
-// Add custom cursor styles if enabled
-if (cursor) {
-    const style = document.createElement('style');
-    style.textContent = `
-        .custom-cursor {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.2s ease;
+// Add custom cursor styles
+const cursorStyle = document.createElement('style');
+cursorStyle.textContent = `
+    .custom-cursor {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        transition: width 0.2s ease, height 0.2s ease;
+        mix-blend-mode: difference;
+        will-change: transform;
+    }
+    .custom-cursor.hover {
+        width: 0;
+        height: 0;
+    }
+    .cursor-follower {
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--primary-color);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        left: 0;
+        top: 0;
+        opacity: 0.6;
+        transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease, border-width 0.2s ease, border-color 0.2s ease;
+        mix-blend-mode: difference;
+        will-change: transform;
+    }
+    .cursor-follower.hover {
+        width: 60px;
+        height: 60px;
+        opacity: 0.8;
+        border-width: 1px;
+    }
+    .cursor-follower.card-hover {
+        width: 80px;
+        height: 80px;
+        border-color: var(--secondary-color);
+    }
+    .cursor-text {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9997;
+        color: var(--primary-color);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        opacity: 0;
+        left: 0;
+        top: 0;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+    }
+    @media (max-width: 768px) {
+        .custom-cursor,
+        .cursor-follower,
+        .cursor-text {
+            display: none !important;
         }
-        .custom-cursor.hover {
-            transform: translate(-50%, -50%) scale(1.5);
+        body {
+            cursor: auto !important;
         }
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--primary-color);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            opacity: 0.5;
-        }
-        .cursor-follower.hover {
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-    `;
-    document.head.appendChild(style);
-}
+    }
+`;
+document.head.appendChild(cursorStyle);
 
 // Scroll Progress Indicator
 const createScrollProgress = () => {
@@ -311,14 +455,15 @@ if ('IntersectionObserver' in window) {
     });
 }
 
-// Add smooth reveal animation for showcase grid items
+// Enhanced showcase grid animations
 const showcaseGridItems = document.querySelectorAll('.grid-item');
 const showcaseObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
             setTimeout(() => {
                 entry.target.style.opacity = '1';
-                entry.target.style.transform = 'scale(1)';
+                entry.target.style.transform = 'scale(1) rotateY(0deg)';
+                entry.target.classList.add('revealed');
             }, index * 100);
         }
     });
@@ -326,9 +471,78 @@ const showcaseObserver = new IntersectionObserver((entries) => {
 
 showcaseGridItems.forEach(item => {
     item.style.opacity = '0';
-    item.style.transform = 'scale(0.9)';
-    item.style.transition = 'all 0.5s ease';
+    item.style.transform = 'scale(0.9) rotateY(15deg)';
+    item.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
     showcaseObserver.observe(item);
+    
+    // Add magnetic effect on hover
+    item.addEventListener('mousemove', (e) => {
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        item.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.05)`;
+    });
+    
+    item.addEventListener('mouseleave', () => {
+        item.style.transform = 'translate(0, 0) scale(1)';
+    });
+});
+
+// Magnetic effect for buttons
+document.querySelectorAll('.btn, .nav-link').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+    });
+});
+
+// 3D Tilt Effect for Feature Cards
+document.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+    });
+});
+
+// Ripple effect on click
+document.querySelectorAll('.btn, .feature-card, .stat-item').forEach(element => {
+    element.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => ripple.remove(), 600);
+    });
 });
 
 console.log('🚀 Modern Page loaded successfully!');
