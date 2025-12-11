@@ -1,0 +1,24 @@
+{
+  "name": "modern-page",
+  "version": "1.0.0",
+  "description": "Uma landpage extremamente moderna usando HTML, CSS e JavaScript com animações e efeitos visuais inspirados nos melhores sites modernos",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server --port=3000 --open=/index.html"
+  },
+  "keywords": [
+    "modern",
+    "landing-page",
+    "website",
+    "html",
+    "css",
+    "javascript",
+    "animations"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
+
