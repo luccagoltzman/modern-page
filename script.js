@@ -545,5 +545,34 @@ document.querySelectorAll('.btn, .feature-card, .stat-item').forEach(element => 
     });
 });
 
-console.log('🚀 Modern Page loaded successfully!');
+// Initialize GSAP ScrollTrigger when available
+function initGSAP() {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        if (!gsap.config) {
+            gsap.config({ nullTargetWarn: false });
+        }
+        // ScrollTrigger will be registered in individual files
+    }
+}
+
+// Ensure all animations work together
+window.addEventListener('load', () => {
+    initGSAP();
+    
+    // Refresh ScrollTrigger on load
+    setTimeout(() => {
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+        }
+    }, 500);
+    
+    console.log('🚀 Modern Page loaded successfully!');
+    console.log('✨ All features initialized:');
+    console.log('  - 3D Real-time Rendering (WebGL)');
+    console.log('  - Scrollytelling 2.0');
+    console.log('  - Typography Animations');
+    console.log('  - AR/VR Motion Graphics');
+    console.log('  - Collaborative Animations');
+    console.log('  - Ambient Background');
+});
 

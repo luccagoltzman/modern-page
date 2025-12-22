@@ -21,6 +21,7 @@
 
 html {
     scroll-behavior: smooth;
+    background-color: var(--bg-primary);
 }
 
 body {
@@ -32,6 +33,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     cursor: none;
+    margin: 0;
+    padding: 0;
 }
 
 @media (max-width: 768px) {
@@ -133,12 +136,13 @@ body {
     position: relative;
     padding: 8rem 2rem 4rem;
     overflow: hidden;
+    z-index: 1;
 }
 
 .hero-content {
     max-width: 1400px;
     width: 100%;
-    z-index: 2;
+    z-index: 3;
     position: relative;
 }
 
@@ -234,7 +238,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 2;
     overflow: hidden;
 }
 
@@ -288,6 +292,7 @@ body {
     letter-spacing: 2px;
     opacity: 0;
     animation: fadeIn 1s ease 1s forwards;
+    z-index: 3;
 }
 
 .scroll-line {
@@ -301,6 +306,12 @@ body {
 section {
     padding: 8rem 0;
     position: relative;
+    overflow: hidden;
+}
+
+/* Ensure no gaps between sections */
+section + section {
+    margin-top: 0;
 }
 
 .container {
@@ -910,6 +921,701 @@ a, button, .btn, .nav-link {
     }
 }
 
+/* 3D Canvas */
+.canvas-3d {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Particles Background */
+.particles-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.ambient-particle {
+    position: absolute;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: float-particle linear infinite;
+    pointer-events: none;
+}
+
+.ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: float-orb 30s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.liquid-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.liquid-blob {
+    position: absolute;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    background: var(--gradient-1);
+    opacity: 0.1;
+    filter: blur(80px);
+    animation: liquid-flow 20s ease-in-out infinite;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(100vh) translateX(0);
+    }
+    100% {
+        transform: translateY(-100px) translateX(100px);
+    }
+}
+
+@keyframes float-orb {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(50px, -50px) scale(1.2);
+    }
+    66% {
+        transform: translate(-30px, 30px) scale(0.8);
+    }
+}
+
+@keyframes liquid-flow {
+    0%, 100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+        transform: translate(50px, -50px) rotate(90deg);
+    }
+    50% {
+        border-radius: 30% 70% 70% 30% / 70% 30% 30% 70%;
+        transform: translate(-30px, 30px) rotate(180deg);
+    }
+    75% {
+        border-radius: 70% 30% 30% 70% / 30% 70% 70% 30%;
+        transform: translate(20px, 20px) rotate(270deg);
+    }
+}
+
+/* Scrollytelling Section */
+.scrollytelling-section {
+    min-height: 100vh;
+    position: relative;
+    background: var(--bg-primary);
+    padding: 8rem 0;
+    overflow: hidden;
+    margin: 0;
+}
+
+.scrollytelling-container {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 16rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scrollytelling-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 16rem);
+    padding: 4rem 2rem;
+    width: 100%;
+}
+
+.story-step {
+    position: absolute;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    padding: 0 2rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.story-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.story-text {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.scrollytelling-visual {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.parallax-layer {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: var(--gradient-1);
+    opacity: 0.1;
+    border-radius: 50%;
+    filter: blur(100px);
+}
+
+.layer-1 {
+    top: -10%;
+    left: -10%;
+    animation: parallax-float 20s ease-in-out infinite;
+}
+
+.layer-2 {
+    bottom: -10%;
+    right: -10%;
+    animation: parallax-float 25s ease-in-out infinite reverse;
+}
+
+.layer-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: parallax-float 30s ease-in-out infinite;
+}
+
+@keyframes parallax-float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(50px, -50px) scale(1.2);
+    }
+}
+
+/* Typography Animations Section */
+.typography-section {
+    padding: 12rem 0;
+    background: var(--bg-secondary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.typography-showcase {
+    text-align: center;
+}
+
+.animated-text {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    margin-bottom: 4rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+}
+
+.text-reveal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.text-reveal {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    display: block;
+    overflow: hidden;
+}
+
+.glitch-text {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: var(--text-primary);
+    position: relative;
+    margin: 4rem 0;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.2em;
+    transition: all 0.3s ease;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff0066;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    left: -2px;
+    text-shadow: -2px 0 #0066ff, 2px 2px #ff0066;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 1s infinite linear alternate-reverse;
+}
+
+.glitch-text.glitch-active::before {
+    animation: glitch-anim 0.3s infinite linear alternate-reverse;
+}
+
+.glitch-text.glitch-active::after {
+    animation: glitch-anim2 0.3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% {
+        clip: rect(31px, 9999px, 94px, 0);
+        transform: skew(0.5deg);
+    }
+    5% {
+        clip: rect(75px, 9999px, 100px, 0);
+        transform: skew(0.5deg);
+    }
+    10% {
+        clip: rect(98px, 9999px, 11px, 0);
+        transform: skew(0.5deg);
+    }
+    15% {
+        clip: rect(40px, 9999px, 29px, 0);
+        transform: skew(0.5deg);
+    }
+    20% {
+        clip: rect(88px, 9999px, 98px, 0);
+        transform: skew(0.5deg);
+    }
+    25% {
+        clip: rect(5px, 9999px, 83px, 0);
+        transform: skew(0.5deg);
+    }
+    30% {
+        clip: rect(79px, 9999px, 66px, 0);
+        transform: skew(0.5deg);
+    }
+    35% {
+        clip: rect(66px, 9999px, 11px, 0);
+        transform: skew(0.5deg);
+    }
+    40% {
+        clip: rect(11px, 9999px, 9px, 0);
+        transform: skew(0.5deg);
+    }
+    45% {
+        clip: rect(21px, 9999px, 6px, 0);
+        transform: skew(0.5deg);
+    }
+    50% {
+        clip: rect(83px, 9999px, 40px, 0);
+        transform: skew(0.5deg);
+    }
+    55% {
+        clip: rect(40px, 9999px, 73px, 0);
+        transform: skew(0.5deg);
+    }
+    60% {
+        clip: rect(58px, 9999px, 99px, 0);
+        transform: skew(0.5deg);
+    }
+    65% {
+        clip: rect(92px, 9999px, 59px, 0);
+        transform: skew(0.5deg);
+    }
+    70% {
+        clip: rect(30px, 9999px, 13px, 0);
+        transform: skew(0.5deg);
+    }
+    75% {
+        clip: rect(88px, 9999px, 73px, 0);
+        transform: skew(0.5deg);
+    }
+    80% {
+        clip: rect(5px, 9999px, 99px, 0);
+        transform: skew(0.5deg);
+    }
+    85% {
+        clip: rect(66px, 9999px, 11px, 0);
+        transform: skew(0.5deg);
+    }
+    90% {
+        clip: rect(16px, 9999px, 16px, 0);
+        transform: skew(0.5deg);
+    }
+    95% {
+        clip: rect(86px, 9999px, 73px, 0);
+        transform: skew(0.5deg);
+    }
+    100% {
+        clip: rect(95px, 9999px, 94px, 0);
+        transform: skew(0.5deg);
+    }
+}
+
+@keyframes glitch-anim2 {
+    0% {
+        clip: rect(65px, 9999px, 100px, 0);
+        transform: skew(0.5deg);
+    }
+    5% {
+        clip: rect(96px, 9999px, 9px, 0);
+        transform: skew(0.5deg);
+    }
+    10% {
+        clip: rect(79px, 9999px, 78px, 0);
+        transform: skew(0.5deg);
+    }
+    15% {
+        clip: rect(66px, 9999px, 11px, 0);
+        transform: skew(0.5deg);
+    }
+    20% {
+        clip: rect(29px, 9999px, 93px, 0);
+        transform: skew(0.5deg);
+    }
+    25% {
+        clip: rect(86px, 9999px, 73px, 0);
+        transform: skew(0.5deg);
+    }
+    30% {
+        clip: rect(11px, 9999px, 16px, 0);
+        transform: skew(0.5deg);
+    }
+    35% {
+        clip: rect(40px, 9999px, 29px, 0);
+        transform: skew(0.5deg);
+    }
+    40% {
+        clip: rect(88px, 9999px, 98px, 0);
+        transform: skew(0.5deg);
+    }
+    45% {
+        clip: rect(5px, 9999px, 83px, 0);
+        transform: skew(0.5deg);
+    }
+    50% {
+        clip: rect(79px, 9999px, 66px, 0);
+        transform: skew(0.5deg);
+    }
+    55% {
+        clip: rect(21px, 9999px, 6px, 0);
+        transform: skew(0.5deg);
+    }
+    60% {
+        clip: rect(83px, 9999px, 40px, 0);
+        transform: skew(0.5deg);
+    }
+    65% {
+        clip: rect(40px, 9999px, 73px, 0);
+        transform: skew(0.5deg);
+    }
+    70% {
+        clip: rect(58px, 9999px, 99px, 0);
+        transform: skew(0.5deg);
+    }
+    75% {
+        clip: rect(92px, 9999px, 59px, 0);
+        transform: skew(0.5deg);
+    }
+    80% {
+        clip: rect(30px, 9999px, 13px, 0);
+        transform: skew(0.5deg);
+    }
+    85% {
+        clip: rect(88px, 9999px, 73px, 0);
+        transform: skew(0.5deg);
+    }
+    90% {
+        clip: rect(5px, 9999px, 99px, 0);
+        transform: skew(0.5deg);
+    }
+    95% {
+        clip: rect(66px, 9999px, 11px, 0);
+        transform: skew(0.5deg);
+    }
+    100% {
+        clip: rect(16px, 9999px, 16px, 0);
+        transform: skew(0.5deg);
+    }
+}
+
+.liquid-text {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+}
+
+/* AR/VR Section */
+.ar-vr-section {
+    padding: 12rem 0;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.ar-vr-canvas-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    margin: 4rem 0;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.ar-vr-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.ar-vr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ar-marker {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    border: 3px solid var(--primary-color);
+    border-radius: 8px;
+    animation: pulse-ar 2s ease-in-out infinite;
+}
+
+.ar-marker::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    opacity: 0.5;
+}
+
+.vr-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+    animation: grid-move 20s linear infinite;
+}
+
+@keyframes pulse-ar {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes grid-move {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(50px, 50px);
+    }
+}
+
+.ar-vr-description {
+    text-align: center;
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+/* Collaborative Section */
+.collaborative-section {
+    padding: 12rem 0;
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+.collaborative-workspace {
+    position: relative;
+    min-height: 600px;
+    margin-top: 4rem;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    overflow: hidden;
+}
+
+.collaborative-canvas {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    padding: 2rem;
+}
+
+.shared-element {
+    position: absolute;
+    padding: 2rem 3rem;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: grab;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.shared-element:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+}
+
+.shared-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+}
+
+.shared-element:nth-child(2) {
+    top: 50%;
+    right: 15%;
+}
+
+.shared-element:nth-child(3) {
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.user-cursors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.user-cursor {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: all 0.1s ease;
+}
+
+.user-cursor::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-label {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid var(--border-color);
+}
+
+.collaborative-info {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.user-count {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
 @media (max-width: 480px) {
     .hero-title {
         font-size: 2.5rem;
@@ -926,6 +1632,24 @@ a, button, .btn, .nav-link {
 
     .stat-number {
         font-size: 2.5rem;
+    }
+
+    .scrollytelling-section {
+        min-height: 100vh;
+        padding: 4rem 0;
+    }
+    
+    .scrollytelling-content {
+        padding: 2rem 1rem;
+    }
+
+    .ar-vr-canvas-container,
+    .collaborative-canvas {
+        height: 400px;
+    }
+
+    .text-reveal-container {
+        gap: 1rem;
     }
 }
 

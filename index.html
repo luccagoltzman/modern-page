@@ -8,6 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Three.js for 3D rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -18,6 +24,10 @@
             </div>
             <div class="nav-links">
                 <a href="#home" class="nav-link">Home</a>
+                <a href="#scrollytelling" class="nav-link">Scrollytelling</a>
+                <a href="#typography" class="nav-link">Tipografia</a>
+                <a href="#ar-vr" class="nav-link">AR/VR</a>
+                <a href="#collaborative" class="nav-link">Colaborativo</a>
                 <a href="#about" class="nav-link">Sobre</a>
                 <a href="#features" class="nav-link">Recursos</a>
                 <a href="#contact" class="nav-link">Contato</a>
@@ -30,8 +40,9 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with 3D Background -->
     <section id="home" class="hero">
+        <canvas id="canvas-3d" class="canvas-3d"></canvas>
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">
@@ -54,18 +65,93 @@
             <div class="gradient-orb orb-1"></div>
             <div class="gradient-orb orb-2"></div>
             <div class="gradient-orb orb-3"></div>
-            <!-- Adicione uma imagem ou vídeo de fundo aqui se desejar -->
-            <!-- <div class="hero-media">
-                <img src="path/to/hero-image.jpg" alt="Hero" class="hero-background">
-                ou
-                <video autoplay muted loop class="hero-background">
-                    <source src="path/to/hero-video.mp4" type="video/mp4">
-                </video>
-            </div> -->
         </div>
+        <div class="particles-background" id="particles-bg"></div>
         <div class="scroll-indicator">
             <div class="scroll-line"></div>
             <span>Scroll</span>
+        </div>
+    </section>
+
+    <!-- Scrollytelling Section -->
+    <section id="scrollytelling" class="scrollytelling-section">
+        <div class="scrollytelling-container">
+            <div class="scrollytelling-content">
+                <div class="story-step" data-step="1">
+                    <h2 class="story-title">Uma Jornada Visual</h2>
+                    <p class="story-text">Cada scroll revela uma nova camada da história</p>
+                </div>
+                <div class="story-step" data-step="2">
+                    <h2 class="story-title">Experiências Imersivas</h2>
+                    <p class="story-text">Onde design e tecnologia se encontram</p>
+                </div>
+                <div class="story-step" data-step="3">
+                    <h2 class="story-title">Inovação Constante</h2>
+                    <p class="story-text">Criando o futuro, um pixel de cada vez</p>
+                </div>
+            </div>
+            <div class="scrollytelling-visual">
+                <div class="parallax-layer layer-1"></div>
+                <div class="parallax-layer layer-2"></div>
+                <div class="parallax-layer layer-3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography Animations Section -->
+    <section id="typography" class="typography-section">
+        <div class="container">
+            <div class="typography-showcase">
+                <h2 class="animated-text" data-text="ANIMAÇÕES TIPOGRÁFICAS">ANIMAÇÕES TIPOGRÁFICAS</h2>
+                <div class="text-reveal-container">
+                    <span class="text-reveal">Expressividade</span>
+                    <span class="text-reveal">Dinamismo</span>
+                    <span class="text-reveal">Impacto Visual</span>
+                </div>
+                <div class="glitch-text" data-text="GLITCH EFFECT">GLITCH EFFECT</div>
+                <div class="liquid-text">LIQUID MOTION</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AR/VR Motion Graphics Section -->
+    <section id="ar-vr" class="ar-vr-section">
+        <div class="container">
+            <div class="ar-vr-content">
+                <h2 class="section-title">Gráficos de Movimento em <span class="highlight">AR/VR</span></h2>
+                <div class="ar-vr-canvas-container">
+                    <canvas id="ar-vr-canvas" class="ar-vr-canvas"></canvas>
+                    <div class="ar-vr-overlay">
+                        <div class="ar-marker"></div>
+                        <div class="vr-grid"></div>
+                    </div>
+                </div>
+                <p class="ar-vr-description">
+                    Experiências imersivas que combinam animação com espaços aumentados e virtuais,
+                    criando interações dinâmicas e envolventes.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collaborative Animations Section -->
+    <section id="collaborative" class="collaborative-section">
+        <div class="container">
+            <h2 class="section-title">Animações <span class="highlight">Colaborativas</span> em Tempo Real</h2>
+            <div class="collaborative-workspace">
+                <div class="user-cursors" id="user-cursors"></div>
+                <div class="collaborative-canvas" id="collaborative-canvas">
+                    <div class="shared-element" data-id="1">Elemento 1</div>
+                    <div class="shared-element" data-id="2">Elemento 2</div>
+                    <div class="shared-element" data-id="3">Elemento 3</div>
+                </div>
+                <div class="collaborative-info">
+                    <p>Múltiplos usuários interagindo simultaneamente</p>
+                    <div class="user-count">
+                        <span id="user-count">1</span> usuário(s) online
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -337,6 +423,12 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="three-scene.js"></script>
+    <script src="scrollytelling.js"></script>
+    <script src="typography-animations.js"></script>
+    <script src="ar-vr-graphics.js"></script>
+    <script src="collaborative-animations.js"></script>
+    <script src="ambient-background.js"></script>
 </body>
 </html>
 
