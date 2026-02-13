@@ -20,7 +20,9 @@
     const MOUSE_RADIUS = 120;
     const REPEL_STRENGTH = 0.08;
     const FRICTION = 0.98;
-    const BASE_SPEED = 0.3;
+    const BASE_SPEED = 0.08;
+    const DRIFT_STRENGTH = 0.012;
+    const DRIFT_CHANGE = 0.0003;
 
     function resize() {
         const hero = canvas.closest('.hero');
@@ -40,13 +42,17 @@
     function initParticles() {
         particles = [];
         for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 0.03 + Math.random() * BASE_SPEED;
             particles.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                vx: (Math.random() - 0.5) * BASE_SPEED,
-                vy: (Math.random() - 0.5) * BASE_SPEED,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
                 radius: 1.5 + Math.random() * 2,
-                opacity: 0.4 + Math.random() * 0.5
+                opacity: 0.4 + Math.random() * 0.5,
+                driftX: (Math.random() - 0.5) * 2,
+                driftY: (Math.random() - 0.5) * 2
             });
         }
     }
@@ -64,6 +70,14 @@
                 const angle = Math.atan2(p.y - mouseY, p.x - mouseX);
                 p.vx += Math.cos(angle) * force * REPEL_STRENGTH;
                 p.vy += Math.sin(angle) * force * REPEL_STRENGTH;
+            }
+            p.vx += p.driftX * DRIFT_STRENGTH;
+            p.vy += p.driftY * DRIFT_STRENGTH;
+            if (Math.random() < DRIFT_CHANGE) {
+                p.driftX += (Math.random() - 0.5) * 0.4;
+                p.driftY += (Math.random() - 0.5) * 0.4;
+                p.driftX = Math.max(-1, Math.min(1, p.driftX));
+                p.driftY = Math.max(-1, Math.min(1, p.driftY));
             }
             p.vx *= FRICTION;
             p.vy *= FRICTION;
