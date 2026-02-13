@@ -497,8 +497,32 @@ body.scroll-locked {
 }
 
 /* Strip section */
-.strip-section { background: var(--bg-2); }
-.strip-inner { text-align: center; }
+.strip-section {
+    position: relative;
+    overflow: hidden;
+}
+.strip-section-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+.strip-section-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.strip-section-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.6);
+    pointer-events: none;
+}
+.strip-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
 
 .strip-quote {
     font-family: var(--font-display);
