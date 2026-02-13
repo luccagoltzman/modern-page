@@ -434,8 +434,32 @@ body.scroll-locked {
     flex-direction: column;
     justify-content: center;
     border-right: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
 }
 .split-block:last-child { border-right: none; border-left: 1px solid var(--border); }
+
+.split-block-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+.split-block-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.split-block-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.55);
+    pointer-events: none;
+}
+.split-block-content {
+    position: relative;
+    z-index: 1;
+}
 
 .split-title {
     font-family: var(--font-display);
