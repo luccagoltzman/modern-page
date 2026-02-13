@@ -19,6 +19,8 @@
     const PARTICLE_COUNT = 80;
     const MOUSE_RADIUS = 120;
     const REPEL_STRENGTH = 0.08;
+    const TITLE_REPEL_STRENGTH = 0.15;
+    const TITLE_PADDING = 40;
     const FRICTION = 0.98;
     const BASE_SPEED = 0.08;
     const DRIFT_STRENGTH = 0.012;
@@ -61,7 +63,26 @@
         return Math.hypot(x2 - x1, y2 - y1);
     }
 
+    function getTitleZone() {
+        const hero = canvas.closest('.hero');
+        if (!hero) return null;
+        const title = hero.querySelector('.hero-name');
+        if (!title) return null;
+        const heroRect = hero.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
+        const cx = titleRect.left - heroRect.left + titleRect.width / 2;
+        const cy = titleRect.top - heroRect.top + titleRect.height / 2;
+        const rx = titleRect.width / 2 + TITLE_PADDING;
+        const ry = titleRect.height / 2 + TITLE_PADDING;
+        return { cx, cy, rx, ry };
+    }
+
+    function isInsideEllipse(px, py, cx, cy, rx, ry) {
+        return Math.pow((px - cx) / rx, 2) + Math.pow((py - cy) / ry, 2) < 1;
+    }
+
     function update() {
+        const titleZone = getTitleZone();
         for (let i = 0; i < particles.length; i++) {
             const p = particles[i];
             const d = dist(p.x, p.y, mouseX, mouseY);
@@ -70,6 +91,18 @@
                 const angle = Math.atan2(p.y - mouseY, p.x - mouseX);
                 p.vx += Math.cos(angle) * force * REPEL_STRENGTH;
                 p.vy += Math.sin(angle) * force * REPEL_STRENGTH;
+            }
+            if (titleZone) {
+                const { cx, cy, rx, ry } = titleZone;
+                if (isInsideEllipse(p.x, p.y, cx, cy, rx, ry)) {
+                    const angle = Math.atan2(p.y - cy, p.x - cx);
+                    const dx = (p.x - cx) / rx;
+                    const dy = (p.y - cy) / ry;
+                    const depth = 1 - Math.sqrt(dx * dx + dy * dy);
+                    const force = Math.max(0.06, depth * TITLE_REPEL_STRENGTH);
+                    p.vx += Math.cos(angle) * force;
+                    p.vy += Math.sin(angle) * force;
+                }
             }
             p.vx += p.driftX * DRIFT_STRENGTH;
             p.vy += p.driftY * DRIFT_STRENGTH;
